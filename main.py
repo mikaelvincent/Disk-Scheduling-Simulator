@@ -1,4 +1,7 @@
 import sys
+from algorithms.fcfs import simulate_fcfs
+from algorithms.c_scan import simulate_c_scan
+from algorithms.c_look import simulate_c_look
 
 def get_initial_position():
     """
@@ -36,6 +39,19 @@ def get_track_requests(file_path):
         print(f"An unexpected error occurred: {e}")
         sys.exit(1)
 
+def display_results(algorithm_name, total_head_movement, service_order):
+    """
+    Display the results of a disk scheduling algorithm execution.
+
+    Args:
+        algorithm_name (str): Name of the scheduling algorithm.
+        total_head_movement (int): Total movement of the disk head.
+        service_order (list of int): Order of track servicing.
+    """
+    print(f"\n=== {algorithm_name} Results ===")
+    print(f"Total Head Movement: {total_head_movement}")
+    print(f"Service Order: {', '.join(map(str, service_order))}\n")
+
 def main():
     """
     Entry point for the Disk Scheduling Simulator application.
@@ -46,10 +62,20 @@ def main():
     
     file_path = input("Enter the file path for track request sequence: ")
     track_requests = get_track_requests(file_path)
-    
-    print(f"Initial Disk Arm Position: {initial_position}")
-    print(f"Track Requests: {track_requests}")
-    # Further implementation will be added in subsequent features.
+
+    disk_size = 200  # Default disk size; can be modified if required.
+
+    # Execute FCFS algorithm
+    total_fcfs, service_fcfs = simulate_fcfs(initial_position, track_requests, disk_size)
+    display_results("First-Come, First-Served (FCFS)", total_fcfs, service_fcfs)
+
+    # Execute C-SCAN algorithm
+    total_c_scan, service_c_scan = simulate_c_scan(initial_position, track_requests, disk_size)
+    display_results("Circular SCAN (C-SCAN)", total_c_scan, service_c_scan)
+
+    # Execute C-LOOK algorithm
+    total_c_look, service_c_look = simulate_c_look(initial_position, track_requests, disk_size)
+    display_results("Circular LOOK (C-LOOK)", total_c_look, service_c_look)
 
 if __name__ == "__main__":
     main()
