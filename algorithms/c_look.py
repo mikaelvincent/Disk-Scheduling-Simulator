@@ -43,9 +43,10 @@ def simulate_c_look(initial_position, track_requests, disk_size, logger):
         total_head_movement += movement
         logger.debug(f"Jumping from {current_position} to {left[0]}, Movement: {movement}")
         current_position = left[0]
+        service_order.append(current_position)  # Include the first left request
 
-        # Service the left side
-        for track in left:
+        # Service the rest of the left side, starting from the next track
+        for track in left[1:]:
             movement = abs(track - current_position)
             total_head_movement += movement
             logger.debug(f"Moving from {current_position} to {track}, Movement: {movement}")
