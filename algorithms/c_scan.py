@@ -47,10 +47,10 @@ def simulate_c_scan(initial_position, track_requests, disk_size, logger):
 
     # Jump to the beginning of the disk
     movement = abs(current_position - 0)
-        total_head_movement += movement
-        current_position = 0
-        service_order.append(current_position)
-        logger.debug(f"Jumping from {current_position} to start of disk (0), Movement: {movement}")
+    total_head_movement += movement
+    current_position = 0
+    service_order.append(current_position)
+    logger.debug(f"Jumping from {current_position} to start of disk (0), Movement: {movement}")
 
     # Service the left side
     for track in left:
