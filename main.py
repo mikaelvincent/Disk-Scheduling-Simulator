@@ -18,23 +18,41 @@ def main():
 
     disk_size = 200  # Default disk size; can be modified if required.
 
-    # Collect results for all algorithms
+    # Prompt user to select scheduling algorithms
+    available_algorithms = {
+        '1': 'First-Come, First-Served (FCFS)',
+        '2': 'Circular SCAN (C-SCAN)',
+        '3': 'Circular LOOK (C-LOOK)'
+    }
+
+    print("\nSelect Scheduling Algorithms to Execute:")
+    for key, name in available_algorithms.items():
+        print(f"{key}. {name}")
+
+    selected_options = input("Enter the numbers of the algorithms to run (comma-separated): ")
+    selected_keys = [option.strip() for option in selected_options.split(',') if option.strip() in available_algorithms]
+
+    if not selected_keys:
+        print("No valid algorithms selected. Exiting.")
+        sys.exit(0)
+
+    selected_algorithms = {key: available_algorithms[key] for key in selected_keys}
+
+    # Collect results for selected algorithms
     results = {}
 
-    # Execute FCFS algorithm
-    total_fcfs, service_fcfs = simulate_fcfs(initial_position, track_requests, disk_size)
-    results["First-Come, First-Served (FCFS)"] = (total_fcfs, service_fcfs)
-    display_results("First-Come, First-Served (FCFS)", total_fcfs, service_fcfs)
+    for key, algorithm_name in selected_algorithms.items():
+        if key == '1':
+            total, service = simulate_fcfs(initial_position, track_requests, disk_size)
+        elif key == '2':
+            total, service = simulate_c_scan(initial_position, track_requests, disk_size)
+        elif key == '3':
+            total, service = simulate_c_look(initial_position, track_requests, disk_size)
+        else:
+            continue  # Should not reach here
 
-    # Execute C-SCAN algorithm
-    total_c_scan, service_c_scan = simulate_c_scan(initial_position, track_requests, disk_size)
-    results["Circular SCAN (C-SCAN)"] = (total_c_scan, service_c_scan)
-    display_results("Circular SCAN (C-SCAN)", total_c_scan, service_c_scan)
-
-    # Execute C-LOOK algorithm
-    total_c_look, service_c_look = simulate_c_look(initial_position, track_requests, disk_size)
-    results["Circular LOOK (C-LOOK)"] = (total_c_look, service_c_look)
-    display_results("Circular LOOK (C-LOOK)", total_c_look, service_c_look)
+        results[algorithm_name] = (total, service)
+        display_results(algorithm_name, total, service)
 
     # Generate and display statistics
     statistics = aggregate_statistics(results)
