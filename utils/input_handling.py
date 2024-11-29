@@ -13,6 +13,19 @@ def get_initial_position():
         except ValueError as ve:
             print(f"Invalid input: {ve}")
 
+def get_disk_size():
+    """
+    Prompt the user to enter the disk size.
+    """
+    while True:
+        try:
+            size = int(input("Enter the disk size (number of tracks): "))
+            if size <= 0:
+                raise ValueError("Disk size must be a positive integer.")
+            return size
+        except ValueError as ve:
+            print(f"Invalid input: {ve}")
+
 def get_track_requests(file_path):
     """
     Read and parse the track request sequence from the specified file.
@@ -20,7 +33,7 @@ def get_track_requests(file_path):
     try:
         with open(file_path, 'r') as file:
             content = file.read()
-            track_requests = [int(track.strip()) for track in content.split(',')]
+            track_requests = [int(track.strip()) for track in content.strip().split()]
             if not track_requests:
                 raise ValueError("Track request sequence is empty.")
             if any(track < 0 for track in track_requests):
