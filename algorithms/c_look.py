@@ -31,27 +31,26 @@ def simulate_c_look(initial_position, track_requests, disk_size, logger):
 
     # Service the right side first
     for track in right:
-        service_order.append(track)
         movement = abs(track - current_position)
         total_head_movement += movement
         logger.debug(f"Moving from {current_position} to {track}, Movement: {movement}")
         current_position = track
+        service_order.append(track)
 
     # Jump to the first request on the left side
     if left:
         movement = abs(current_position - left[0])
         total_head_movement += movement
-        current_position = left[0]
-        service_order.append(current_position)
         logger.debug(f"Jumping from {current_position} to {left[0]}, Movement: {movement}")
+        current_position = left[0]
 
-    # Service the left side
-    for track in left:
-        service_order.append(track)
-        movement = abs(track - current_position)
-        total_head_movement += movement
-        logger.debug(f"Moving from {current_position} to {track}, Movement: {movement}")
-        current_position = track
+        # Service the left side
+        for track in left:
+            movement = abs(track - current_position)
+            total_head_movement += movement
+            logger.debug(f"Moving from {current_position} to {track}, Movement: {movement}")
+            current_position = track
+            service_order.append(track)
 
     logger.info(f"C-LOOK Total Head Movement: {total_head_movement}")
     logger.debug(f"C-LOOK Service Order: {service_order}")
