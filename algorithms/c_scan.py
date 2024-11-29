@@ -31,34 +31,31 @@ def simulate_c_scan(initial_position, track_requests, disk_size, logger):
 
     # Service the right side first
     for track in right:
-        service_order.append(track)
         movement = abs(track - current_position)
         total_head_movement += movement
         logger.debug(f"Moving from {current_position} to {track}, Movement: {movement}")
         current_position = track
+        service_order.append(track)
 
-    if right:
-        # Move to the end of the disk
-        movement = abs(disk_size - 1 - current_position)
-        total_head_movement += movement
-        current_position = disk_size - 1
-        service_order.append(current_position)
-        logger.debug(f"Moving from {current_position} to end of disk ({disk_size - 1}), Movement: {movement}")
+    # Move to the end of the disk
+    movement = abs(disk_size - 1 - current_position)
+    total_head_movement += movement
+    logger.debug(f"Moving from {current_position} to end of disk ({disk_size - 1}), Movement: {movement}")
+    current_position = disk_size - 1
 
     # Jump to the beginning of the disk
     movement = abs(current_position - 0)
     total_head_movement += movement
-    current_position = 0
-    service_order.append(current_position)
     logger.debug(f"Jumping from {current_position} to start of disk (0), Movement: {movement}")
+    current_position = 0
 
     # Service the left side
     for track in left:
-        service_order.append(track)
         movement = abs(track - current_position)
         total_head_movement += movement
         logger.debug(f"Moving from {current_position} to {track}, Movement: {movement}")
         current_position = track
+        service_order.append(track)
 
     logger.info(f"C-SCAN Total Head Movement: {total_head_movement}")
     logger.debug(f"C-SCAN Service Order: {service_order}")
